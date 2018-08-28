@@ -30,63 +30,46 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Create a user named taiga, and a virtualhost for RabbitMQ (taiga-events)
-#RUN rabbitmqctl add_user taiga PASSWORD_FOR_EVENTS
-#RUN rabbitmqctl add_vhost taiga
-#RUN rabbitmqctl set_permissions -p taiga taiga ".*" ".*" ".*"
+# RUN rabbitmqctl add_user taiga PASSWORD_FOR_EVENTS
+# RUN rabbitmqctl add_vhost taiga
+# RUN rabbitmqctl set_permissions -p taiga taiga ".*" ".*" ".*"
 
-# Create taiga user
-RUN useradd --home-dir /home/taiga --create-home --shell /bin/bash taiga
-RUN adduser taiga sudo
+# Create the sources folder
+RUN mkdir -p /src
+
+# Create the logs folder
+RUN mkdir -p /logs
 
 # #############################################################################
 # BACKEND CONFIGURATION
 # #############################################################################
 
-# As taiga user
-RUN su taiga
-WORKDIR /home/taiga
-
-# Create the logs folder (mandatory)
-RUN mkdir -p ~/logs
-
 # Download the code
-RUN git clone https://github.com/taigaio/taiga-back.git taiga-back
-WORKDIR /home/taiga/taiga-back
+RUN git clone https://github.com/taigaio/taiga-back.git /src/taiga-back
+WORKDIR /src/taiga-back
 RUN git checkout stable
-
-# Create new virtualenv named taiga
-# RUN mkvirtualenv -p /usr/bin/python3.5 taiga
 
 # Install dependencies
 RUN pip3 install -r requirements.txt
 
-# Copy-paste settings
-WORKDIR /home/taiga
-COPY settings/taiga-back/local.py /home/taiga/taiga-back/settings/local.py
+# Copy-paste settings and DB configuration
+COPY checkdb.py /src/taiga-back
+COPY settings/taiga-back/local.py /src/taiga-back/settings/local.py
 
 # Setup media
-VOLUME ./taiga-back/media
-
-# Back to default user
-RUN exit
+VOLUME /src/taiga-back/media
 
 # #############################################################################
 # FRONTEND CONFIGURATION
 # #############################################################################
 
-# As taiga user
-RUN su taiga
-WORKDIR /home/taiga
-
 # Download the code
-RUN git clone https://github.com/taigaio/taiga-front-dist.git taiga-front-dist
-WORKDIR /home/taiga/taiga-front-dist
+RUN git clone https://github.com/taigaio/taiga-front-dist.git /src/taiga-front-dist
+WORKDIR /src/taiga-front-dist
 RUN git checkout stable
 
 # Copy-paste settings
-COPY settings/taiga-front/conf.json /home/taiga/taiga-front-dist/dist/conf.json
-
-RUN exit
+COPY settings/taiga-front/conf.json /src/taiga-front-dist/dist/conf.json
 
 # #############################################################################
 # EVENTS INSTALLATION
@@ -108,10 +91,7 @@ RUN exit
 RUN rm /etc/nginx/sites-enabled/default
 COPY settings/nginx/taiga.conf /etc/nginx/conf.d/taiga.conf
 
-COPY checkdb.py /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN ln -s usr/local/bin/checkdb.py /
-RUN ln -s usr/local/bin/docker-entrypoint.sh /
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8001"]
+CMD ["python3", "/src/taiga-back/manage.py", "runserver", "0.0.0.0:8001"]
