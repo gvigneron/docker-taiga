@@ -9,7 +9,7 @@ sleep $TAIGA_SLEEP
 # Setup database automatically if needed
 if [ -z "$TAIGA_SKIP_DB_CHECK" ]; then
   echo "Running database check"
-  python /checkdb.py
+  python3 /checkdb.py
   DB_CHECK_STATUS=$?
 
   if [ $DB_CHECK_STATUS -eq 1 ]; then
@@ -17,17 +17,17 @@ if [ -z "$TAIGA_SKIP_DB_CHECK" ]; then
     exit 1
   elif [ $DB_CHECK_STATUS -eq 2 ]; then
     echo "Configuring initial database"
-    python manage.py migrate --noinput
-    python manage.py loaddata initial_user
-    python manage.py loaddata initial_project_templates
-    python manage.py loaddata initial_role
-    python manage.py compilemessages
+    python3 manage.py migrate --noinput
+    python3 manage.py loaddata initial_user
+    python3 manage.py loaddata initial_project_templates
+    python3 manage.py loaddata initial_role
+    python3 manage.py compilemessages
   fi
 fi
 
 # Look for static folder, if it does not exist, then generate it
 if [ ! -d "/usr/src/taiga-back/static" ]; then
-  python manage.py collectstatic --noinput
+  python3 manage.py collectstatic --noinput
 fi
 
 # Automatically replace "TAIGA_HOSTNAME" with the environment variable

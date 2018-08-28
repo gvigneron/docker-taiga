@@ -108,7 +108,10 @@ RUN exit
 RUN rm /etc/nginx/sites-enabled/default
 COPY settings/nginx/taiga.conf /etc/nginx/conf.d/taiga.conf
 
-COPY checkdb.py /checkdb.py
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY checkdb.py /usr/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN ln -s usr/local/bin/checkdb.py /
+RUN ln -s usr/local/bin/docker-entrypoint.sh /
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8001"]
