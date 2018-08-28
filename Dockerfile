@@ -25,9 +25,9 @@ RUN apt-get install -y libxml2-dev libxslt-dev
 RUN apt-get install -y libssl-dev libffi-dev
 
 # Create a user named taiga, and a virtualhost for RabbitMQ (taiga-events)
-RUN rabbitmqctl add_user taiga PASSWORD_FOR_EVENTS
-RUN rabbitmqctl add_vhost taiga
-RUN rabbitmqctl set_permissions -p taiga taiga ".*" ".*" ".*"
+#RUN rabbitmqctl add_user taiga PASSWORD_FOR_EVENTS
+#RUN rabbitmqctl add_vhost taiga
+#RUN rabbitmqctl set_permissions -p taiga taiga ".*" ".*" ".*"
 
 # Create the logs folder (mandatory)
 RUN mkdir -p ~/logs
