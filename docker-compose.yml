@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  taiga:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      TAIGA_HOSTNAME: example.com
+      TAIGA_SECRET_KEY: taiga_secret_key
+      TAIGA_DEFAULT_FROM_EMAIL: no-reply@example.com
+      TAIGA_DB_NAME: taigadb
+      TAIGA_DB_HOST: postgres
+      TAIGA_DB_USER: taiga
+      TAIGA_DB_PASSWORD: postgres_password
+      TAIGA_SLEEP: 15 # to allow the database time to start
+      TAIGA_SSL_BY_REVERSE_PROXY: True
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: taigadb
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_USER: taiga
+    ports:
+      - 5432
+    volumes:
+      # This helps prevent your postgres data from deleted
+      - ./pgdata:/var/lib/postgresql/data
+
+networks:
+  web:
+    external: true
