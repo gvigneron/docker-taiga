@@ -49,7 +49,7 @@ WORKDIR /home/taiga
 
 # Download the code
 RUN cd ~
-RUN git clone https://github.com/taigaio/taiga-back.git taiga-back
+RUN git clone https://github.com/taigaio/taiga-back taiga-back
 RUN cd taiga-back
 RUN git checkout stable
 
@@ -71,7 +71,7 @@ VOLUME ~/taiga-back/media
 
 # Download the code
 RUN cd ~
-RUN git clone https://github.com/taigaio/taiga-front-dist.git taiga-front-dist
+RUN git clone https://github.com/taigaio/taiga-front-dist taiga-front-dist
 RUN cd taiga-front-dist
 RUN git checkout stable
 
