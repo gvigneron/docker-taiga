@@ -92,6 +92,6 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY settings/nginx/taiga.conf /etc/nginx/conf.d/taiga.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["python3", "/src/taiga-back/manage.py", "runserver", "0.0.0.0:8001"]
