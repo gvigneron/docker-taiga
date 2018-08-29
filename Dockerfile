@@ -34,42 +34,40 @@ RUN ln -sf /dev/stderr /var/log/nginx/error.log
 # RUN rabbitmqctl add_vhost taiga
 # RUN rabbitmqctl set_permissions -p taiga taiga ".*" ".*" ".*"
 
-# Create the sources folder
-RUN mkdir -p /src
-
-# Create the logs folder
-RUN mkdir -p /logs
+# Create the sources and logs folders
+RUN mkdir -p /usr/src
+RUN mkdir -p /var/logs
 
 # #############################################################################
 # BACKEND CONFIGURATION
 # #############################################################################
 
 # Download the code
-RUN git clone https://github.com/taigaio/taiga-back.git /src/taiga-back
-WORKDIR /src/taiga-back
+RUN git clone https://github.com/taigaio/taiga-back.git /usr/src/taiga-back
+WORKDIR /usr/src/taiga-back
 RUN git checkout stable
 
 # Install dependencies
 RUN pip3 install -r requirements.txt
 
 # Copy-paste settings and DB configuration
-COPY checkdb.py /src/taiga-back
-COPY settings/taiga-back/local.py /src/taiga-back/settings/local.py
+COPY checkdb.py /usr/src
+COPY settings/taiga-back/local.py /usr/src/taiga-back/settings/local.py
 
 # Setup media
-VOLUME /src/taiga-back/media
+VOLUME /usr/src/taiga-back/media
 
 # #############################################################################
 # FRONTEND CONFIGURATION
 # #############################################################################
 
 # Download the code
-RUN git clone https://github.com/taigaio/taiga-front-dist.git /src/taiga-front-dist
-WORKDIR /src/taiga-front-dist
+RUN git clone https://github.com/taigaio/taiga-front-dist.git /usr/src/taiga-front-dist
+WORKDIR /usr/src/taiga-front-dist
 RUN git checkout stable
 
 # Copy-paste settings
-COPY settings/taiga-front/conf.json /src/taiga-front-dist/dist/conf.json
+COPY settings/taiga-front/conf.json /usr/src/taiga-front-dist/dist/conf.json
 
 # #############################################################################
 # EVENTS INSTALLATION
@@ -92,6 +90,6 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY settings/nginx/taiga.conf /etc/nginx/conf.d/taiga.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["usr/", "/usr/local/bin/docker-entrypoint.sh"]
 
-CMD ["python3", "/src/taiga-back/manage.py", "runserver", "0.0.0.0:8001"]
+CMD ["python3", "/usr/src/taiga-back/manage.py", "runserver", "0.0.0.0:8001"]
