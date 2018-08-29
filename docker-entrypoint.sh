@@ -17,17 +17,19 @@ if [ -z "$TAIGA_SKIP_DB_CHECK" ]; then
     exit 1
   elif [ $DB_CHECK_STATUS -eq 2 ]; then
     echo "Configuring initial database"
-    python3 /usr/src/taiga-back/manage.py migrate --noinput
-    python3 /usr/src/taiga-back/manage.py compilemessages
-    python3 /usr/src/taiga-back/manage.py loaddata initial_user
-    python3 /usr/src/taiga-back/manage.py loaddata initial_project_templates
-    python3 /usr/src/taiga-back/manage.py rebuild_timeline --purge
+    cd /usr/src/taiga-back/
+    python3 manage.py migrate --noinput
+    python3 manage.py compilemessages
+    python3 manage.py loaddata initial_user
+    python3 manage.py loaddata initial_project_templates
+    python3 manage.py rebuild_timeline --purge
   fi
 fi
 
 # Look for static folder, if it does not exist, then generate it
 if [ ! -d "/usr/src/taiga-back/static" ]; then
-  python3 /usr/src/taiga-back/manage.py collectstatic --noinput
+  cd /usr/src/taiga-back/
+  python3 manage.py collectstatic --noinput
 fi
 
 # Automatically replace "TAIGA_HOSTNAME" with the environment variable
