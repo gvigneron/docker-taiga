@@ -14,6 +14,7 @@ services:
       TAIGA_DB_USER: 'taiga'
       TAIGA_DB_PASSWORD: 'postgres_password'
       TAIGA_SLEEP: 15 # to allow the database time to start
+      TAIGA_SSL: 'False'
       TAIGA_SSL_BY_REVERSE_PROXY: 'True'
 
   postgres:
@@ -26,7 +27,7 @@ services:
       - 5432
     volumes:
       # This helps prevent your postgres data from deleted
-      - ./pgdata:/var/lib/postgresql/data
+      - /var/pgdata:/var/lib/postgresql/data
 
 networks:
   web:

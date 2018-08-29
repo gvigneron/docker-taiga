@@ -9,7 +9,7 @@ sleep $TAIGA_SLEEP
 # Setup database automatically if needed
 if [ -z "$TAIGA_SKIP_DB_CHECK" ]; then
   echo "Running database check"
-  python3 /usr/src/taiga-back/checkdb.py
+  python3 /usr/src/checkdb.py
   DB_CHECK_STATUS=$?
 
   if [ $DB_CHECK_STATUS -eq 1 ]; then
