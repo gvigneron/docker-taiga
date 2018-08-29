@@ -6,16 +6,29 @@ services:
     depends_on:
       - postgres
     environment:
-      TAIGA_HOSTNAME: 'example.com'
+      # Host and security
+      TAIGA_HOSTNAME: 'taiga.domain.tld'
+      TAIGA_SSL: 'False'
+      TAIGA_SSL_BY_REVERSE_PROXY: 'True'
       TAIGA_SECRET_KEY: 'taiga_secret_key'
-      TAIGA_DEFAULT_FROM_EMAIL: 'no-reply@example.com'
+      # Postgres
       TAIGA_DB_NAME: 'taigadb'
       TAIGA_DB_HOST: 'postgres'
       TAIGA_DB_USER: 'taiga'
       TAIGA_DB_PASSWORD: 'postgres_password'
-      TAIGA_SLEEP: 15 # to allow the database time to start
-      TAIGA_SSL: 'False'
-      TAIGA_SSL_BY_REVERSE_PROXY: 'True'
+      # Emails
+      TAIGA_DEFAULT_FROM_EMAIL: 'taiga@domain.tld'
+      TAIGA_ENABLE_EMAIL: 'False'  # Via SMTP
+      TAIGA_EMAIL_USE_TLS: 'False'
+      TAIGA_EMAIL_HOST: ''
+      TAIGA_EMAIL_PORT: ''
+      TAIGA_EMAIL_USER: ''
+      TAIGA_EMAIL_PASS: ''
+      # Events
+      #RABBIT_PORT: ''
+      #REDIS_PORT: ''
+      # Startup
+      TAIGA_SLEEP: 15  # Allow the database time to start
 
   postgres:
     image: postgres

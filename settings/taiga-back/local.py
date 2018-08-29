@@ -19,8 +19,8 @@ STATIC_URL = 'http://' + os.getenv('TAIGA_HOSTNAME') + '/static/'
 if os.getenv('TAIGA_SSL').lower() == 'true' or os.getenv('TAIGA_SSL_BY_REVERSE_PROXY').lower() == 'true':
     SITES['api']['scheme'] = 'https'
     SITES['front']['scheme'] = 'https'
-    MEDIA_URL = 'https://' + TAIGA_HOSTNAME + '/media/'
-    STATIC_URL = 'https://' + TAIGA_HOSTNAME + '/static/'
+    MEDIA_URL = 'https://' + os.getenv('TAIGA_HOSTNAME') + '/media/'
+    STATIC_URL = 'https://' + os.getenv('TAIGA_HOSTNAME') + '/static/'
 
 
 SECRET_KEY = os.getenv('TAIGA_SECRET_KEY')
