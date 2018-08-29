@@ -58,6 +58,7 @@ fi
 
 # Start nginx service (need to start it as background process)
 # nginx -g "daemon off;"
+nginx -t
 service nginx start
 
 # Run CMD
