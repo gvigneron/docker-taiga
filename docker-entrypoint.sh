@@ -18,10 +18,10 @@ if [ -z "$TAIGA_SKIP_DB_CHECK" ]; then
   elif [ $DB_CHECK_STATUS -eq 2 ]; then
     echo "Configuring initial database"
     python3 /usr/src/taiga-back/manage.py migrate --noinput
+    python3 /usr/src/taiga-back/manage.py compilemessages
     python3 /usr/src/taiga-back/manage.py loaddata initial_user
     python3 /usr/src/taiga-back/manage.py loaddata initial_project_templates
-    python3 /usr/src/taiga-back/manage.py loaddata initial_role
-    python3 /usr/src/taiga-back/manage.py compilemessages
+    python3 /usr/src/taiga-back/manage.py rebuild_timeline --purge
   fi
 fi
 

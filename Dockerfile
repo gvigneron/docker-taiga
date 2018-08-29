@@ -88,6 +88,7 @@ COPY settings/taiga-front/conf.json /usr/src/taiga-front-dist/dist/conf.json
 # Remove the default nginx config file to avoid collision with Taiga
 RUN rm /etc/nginx/sites-enabled/default
 COPY settings/nginx/taiga.conf /etc/nginx/conf.d/taiga.conf
+EXPOSE 80
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["bash", "/usr/local/bin/docker-entrypoint.sh"]

@@ -5,6 +5,17 @@ services:
     build: .
     depends_on:
       - postgres
+    networks:
+      - web
+      - default
+    expose:
+      - "80"
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:taiga.domain.tld"
+      - "traefik.basic.port=80"
+      - "traefik.basic.protocol=http"
     environment:
       # Host and security
       TAIGA_HOSTNAME: 'taiga.domain.tld'
